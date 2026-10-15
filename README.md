@@ -25,13 +25,30 @@ Anthropic, modelo `opus-5-5`), que rastreia o programa contra cada critério e
 devolve aprovação/reprovação com feedback educativo.
 
 A chave fica **só no servidor**: o `.env` é lido por
-`server/judgeMiddleware.js` (middleware do Vite em `/api/judge`). O navegador
-nunca recebe a chave.
+`server/judge.js` (núcleo compartilhado). O navegador nunca recebe a chave.
 
 ```bash
 cp .env.example .env   # preencha GATEWAY_KEY com sua chave do gateway
 npm run dev            # reinicie para o .env ser recarregado
 ```
+
+### Deploy na Vercel
+
+Em produção a rota `/api/judge` é servida pela **Serverless Function**
+[`api/judge.js`](api/judge.js) — o middleware do Vite só existe no `npm run dev`.
+Ambos importam o núcleo compartilhado [`server/judge.js`](server/judge.js).
+
+Após o push (ou `vercel --prod`), configure no painel da Vercel em
+**Settings → Environment Variables**:
+
+| Variável | Valor |
+| --- | --- |
+| `GATEWAY_URL` | `https://api.pherseus.dev` |
+| `GATEWAY_KEY` | sua chave |
+| `GATEWAY_MODEL` | `sonnet-5` (recomendado: o `opus-5-5` pode estourar o tempo da função) |
+
+O `.env` local **não** é enviado à Vercel — as variáveis precisam estar no painel.
+A função está limitada a `maxDuration: 60` segundos (limite do plano Hobby).
 
 ---
 
@@ -87,7 +104,10 @@ src/
 ├── services/
 │   └── codeExecution.js        # cliente do juiz (/api/judge)
 ├── server/
-│   └── judgeMiddleware.js      # middleware Vite: chama o gateway de IA
+│   ├── judge.js                # núcleo do juiz (compartilhado)
+│   └── judgeMiddleware.js      # /api/judge no dev server (Vite)
+├── api/
+│   └── judge.js                # /api/judge na Vercel (produção)
 ├── components/
 │   ├── layout/                 # AppLayout, Sidebar, TopBar, BottomNav
 │   ├── ui/                     # Button, Card, Badge, ProgressBar,
