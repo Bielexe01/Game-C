@@ -1,0 +1,77 @@
+import {
+  GitBranch,
+  Repeat,
+  Layers,
+  Boxes,
+  ListOrdered,
+  Table2,
+  Footprints,
+  Swords,
+  Lightbulb,
+  LightbulbOff,
+  Flame,
+  TrendingUp,
+  Trophy,
+  Terminal,
+  Play,
+  Rocket,
+  Map,
+  User,
+  House,
+  Lock,
+  CheckCircle2,
+  Circle,
+  XCircle,
+  Star,
+  Coins,
+  Zap,
+  Target,
+  ArrowRight,
+  RotateCcw,
+  FileText,
+  ExternalLink,
+} from 'lucide-react'
+
+/**
+ * Mapa nome → componente Lucide.
+ * Os dados (phases.js, achievements.js) guardam apenas a STRING do ícone,
+ * mantendo os dados livres de dependência da UI.
+ */
+const ICONS = {
+  'git-branch': GitBranch,
+  repeat: Repeat,
+  layers: Layers,
+  boxes: Boxes,
+  'list-ordered': ListOrdered,
+  'table-2': Table2,
+  footprints: Footprints,
+  swords: Swords,
+  lightbulb: Lightbulb,
+  'lightbulb-off': LightbulbOff,
+  flame: Flame,
+  'trending-up': TrendingUp,
+  trophy: Trophy,
+  terminal: Terminal,
+  play: Play,
+  rocket: Rocket,
+  map: Map,
+  user: User,
+  house: House,
+  lock: Lock,
+  'check-circle': CheckCircle2,
+  circle: Circle,
+  'x-circle': XCircle,
+  star: Star,
+  coins: Coins,
+  zap: Zap,
+  target: Target,
+  'arrow-right': ArrowRight,
+  'rotate-ccw': RotateCcw,
+  'file-text': FileText,
+  'external-link': ExternalLink,
+}
+
+export default function Icon({ name, size = 18, className = '', ...props }) {
+  const Component = ICONS[name] ?? Circle
+  return <Component size={size} className={className} {...props} />
+}
