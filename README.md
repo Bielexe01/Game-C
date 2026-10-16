@@ -158,6 +158,18 @@ src/
 
 ---
 
+### Passo a passo por IA
+
+Cada missão tem um botão **“Gerar passo a passo”**: a IA monta um roteiro
+numerado (plano → trecho-chave → teste), revelado **um passo por vez**, sem
+entregar o programa pronto. Custa −15 XP **uma única vez** por missão; o
+roteiro fica salvo no estado do jogo e pode ser relido sem novo custo.
+
+Rotas: `/api/guide` — middleware no dev (`server/judgeMiddleware.js`) e
+Serverless Function na Vercel (`api/guide.js`), ambas sobre o núcleo
+[`server/guide.js`](server/guide.js). Usa as **mesmas** variáveis de ambiente
+do juiz (`GATEWAY_URL`, `GATEWAY_KEY`, `GATEWAY_MODEL`).
+
 ## 5. Progressão (estado)
 
 - **Zustand + `persist`** (localStorage, chave `c-adventure-progress`).

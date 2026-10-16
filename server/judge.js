@@ -75,7 +75,7 @@ ${code}
 Julge o código contra CADA critério acima e responda apenas com o JSON.`
 }
 
-function extractJson(text) {
+export function extractJson(text) {
   const cleaned = text.replace(/```json/gi, '').replace(/```/g, '').trim()
   const start = cleaned.indexOf('{')
   const end = cleaned.lastIndexOf('}')

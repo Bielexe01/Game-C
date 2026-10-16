@@ -20,6 +20,7 @@ import CodeEditor from '../components/mission/CodeEditor.jsx'
 import HintsPanel from '../components/mission/HintsPanel.jsx'
 import CriteriaList from '../components/mission/CriteriaList.jsx'
 import ResultPanel from '../components/mission/ResultPanel.jsx'
+import StepByStep from '../components/mission/StepByStep.jsx'
 
 import { getMissionById, getMissionsByPhase } from '../data/missions.js'
 import { getPhaseById } from '../data/phases.js'
@@ -218,6 +219,8 @@ export default function Mission() {
             usedCount={hintsUsed}
             onUseHint={() => useHint(mission.id)}
           />
+
+          <StepByStep mission={mission} code={code} />
         </div>
 
         {/* Coluna direita: editor, botões e resultado */}

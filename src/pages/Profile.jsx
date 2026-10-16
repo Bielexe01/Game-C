@@ -122,9 +122,13 @@ export default function Profile() {
             dificuldade é o caminho mais rápido para fixar.
           </p>
           {(() => {
-            const toReview = attempted.filter(
-              (m) => state.missions[m.id].passed && (state.missions[m.id].hintsUsed ?? 0) > 0,
-            )
+            const toReview = attempted.filter((m) => {
+              const record = state.missions[m.id]
+              return (
+                record.passed &&
+                ((record.hintsUsed ?? 0) > 0 || (record.guideUsed ?? 0) > 0)
+              )
+            })
             const failed = attempted.filter((m) => state.missions[m.id].attempts > 1 && !state.missions[m.id].passed)
 
             if (failed.length === 0 && toReview.length === 0) {
@@ -149,7 +153,9 @@ export default function Profile() {
                 ))}
                 {toReview.map((m) => (
                   <li key={m.id} className="flex items-center justify-between text-[13px]">
-                    <span className="text-muted">{m.title} (usou dicas)</span>
+                    <span className="text-muted">
+                      {m.title} (usou dicas{state.missions[m.id].guideUsed ? ' / passo a passo' : ''})
+                    </span>
                     <button
                       onClick={() => navigate(`/missao/${m.id}`)}
                       className="text-brand-bright hover:underline"

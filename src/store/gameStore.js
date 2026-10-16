@@ -10,6 +10,9 @@ import { ACHIEVEMENTS } from '../data/achievements.js'
 /* ------------------------------------------------------------------ */
 export const XP_PER_LEVEL = 200
 
+/** Custo de uma consulta ao passo a passo (uma vez por missão). */
+export const GUIDE_XP_COST = 15
+
 const LEVEL_TITLES = [
   'Recruta',
   'Aprendiz',
@@ -49,7 +52,8 @@ export const useGameStore = create(
     (set, get) => ({
       xp: 0,
       coins: 0,
-      missions: {}, // { [missionId]: { status, attempts, hintsUsed, passed } }
+      missions: {}, // { [missionId]: { status, attempts, hintsUsed, guideUsed, passed } }
+      guides: {}, // { [missionId]: { steps, encouraging, model } }
       unlockedAchievements: [],
       streak: { days: 0, lastDate: null },
 
@@ -115,6 +119,47 @@ export const useGameStore = create(
         }))
       },
 
+      /**
+       * Usa o passo a passo por IA (custa GUIDE_XP_COST uma única vez).
+       * O roteiro fica salvo em `guides` e pode ser relido sem novo custo.
+       */
+      useGuide(missionId, guide) {
+        const current = get().missions[missionId] ?? {
+          status: 'em-andamento',
+          attempts: 0,
+          hintsUsed: 0,
+          passed: false,
+        }
+
+        set((state) => ({
+          xp: Math.max(0, state.xp - GUIDE_XP_COST),
+          guides: { ...state.guides, [missionId]: guide },
+          missions: {
+            ...state.missions,
+            [missionId]: { ...current, guideUsed: (current.guideUsed ?? 0) + 1 },
+          },
+        }))
+      },
+
+      /** Gera um novo passo a passo para a mesma missão (nova cobrança). */
+      replaceGuide(missionId, guide) {
+        const current = get().missions[missionId] ?? {
+          status: 'em-andamento',
+          attempts: 0,
+          hintsUsed: 0,
+          passed: false,
+        }
+
+        set((state) => ({
+          xp: Math.max(0, state.xp - GUIDE_XP_COST),
+          guides: { ...state.guides, [missionId]: guide },
+          missions: {
+            ...state.missions,
+            [missionId]: { ...current, guideUsed: (current.guideUsed ?? 0) + 1 },
+          },
+        }))
+      },
+
       /** Avalia e desbloqueia as conquistas cujo predicado passou a valer. */
       evaluateAchievements() {
         const state = get()
@@ -140,6 +185,7 @@ export const useGameStore = create(
           xp: 0,
           coins: 0,
           missions: {},
+          guides: {},
           unlockedAchievements: [],
           streak: { days: 0, lastDate: null },
         })
@@ -181,7 +227,9 @@ export function buildStats(state) {
     bossCompleted: MISSIONS.filter(
       (m) => m.boss && state.missions[m.id]?.status === 'concluida',
     ).length,
-    cleanCompletions: completed.filter((m) => (m.hintsUsed ?? 0) === 0).length,
+    cleanCompletions: completed.filter(
+      (m) => (m.hintsUsed ?? 0) === 0 && (m.guideUsed ?? 0) === 0,
+    ).length,
     phaseCompleted,
     level: computeLevel(state.xp).level,
   }
