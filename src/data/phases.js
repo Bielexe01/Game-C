@@ -89,7 +89,7 @@ export const PHASES = [
     pdf: '/aulas/aula-5.pdf',
     icon: 'boxes',
     color: '#a855f7',
-    status: 'em-breve',
+    status: 'ativo',
     missionsToUnlock: 2,
     summary:
       'Dividir o problema em responsabilidades: nomear tarefas, trocar informações por parâmetros e retorno, e usar o main() como coordenador.',
@@ -111,7 +111,7 @@ export const PHASES = [
     pdf: '/aulas/aula-6.pdf',
     icon: 'list-ordered',
     color: '#ec4899',
-    status: 'em-breve',
+    status: 'ativo',
     missionsToUnlock: 2,
     summary:
       'Uma estrutura com várias posições, laços que percorrem a coleção e strings como aplicação de vetores de char.',
@@ -133,7 +133,7 @@ export const PHASES = [
     pdf: '/aulas/aula-7.pdf',
     icon: 'table-2',
     color: '#06b6d4',
-    status: 'em-breve',
+    status: 'ativo',
     missionsToUnlock: 2,
     summary:
       'Duas dimensões com [linha][coluna], matrizes em funções, coleções de strings e dados relacionados pelo mesmo índice.',

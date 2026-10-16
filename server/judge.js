@@ -37,17 +37,24 @@ Responda SOMENTE com JSON válido, sem markdown, sem comentários fora do JSON:
 
 Regras do JSON:
 - "results" deve ter EXATAMENTE um item para cada critério informado, com o mesmo "id".
+- Critérios marcados como "exigência estrutural" não têm entrada nem saída: avalie apenas se o código atende ao que está descrito e responda true/false no "passed".
 - Para critérios aprovados, "reason" deve ser "".
 - Escreva todo o conteúdo em português do Brasil.`
 
 function buildUserPrompt(mission, code) {
   const criteria = mission.criteria
-    .map(
-      (c) =>
-        `- id: ${c.id}\n  o que deve acontecer: ${c.label}\n  entrada (stdin): ${
-          c.stdin ? JSON.stringify(c.stdin) : '(vazia)'
-        }\n  saída esperada (exata): ${JSON.stringify(c.expected)}`,
-    )
+    .map((c) => {
+      // Critério de ESTRUTURA: não tem saída esperada, só uma exigência
+      // sobre o código (ex.: "existe uma função dobro chamada no main").
+      if (c.type === 'code') {
+        return `- id: ${c.id}\n  exigência estrutural (verifique no código): ${c.label}`
+      }
+      return `- id: ${c.id}\n  o que deve acontecer: ${c.label}\n  entrada (stdin): ${
+        c.stdin ? JSON.stringify(c.stdin) : '(vazia)'
+      }\n  saída esperada (exata): ${JSON.stringify(c.expected)}${
+        c.trimEnd ? ' (espaços finais de cada linha são ignorados)' : ''
+      }`
+    })
     .join('\n\n')
 
   return `# Missão: ${mission.title}

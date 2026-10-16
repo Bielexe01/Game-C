@@ -50,6 +50,24 @@ export const ACHIEVEMENTS = [
     check: (s) => s.totalAttempts >= 10,
   },
   {
+    id: 'funcoes-no-bolso',
+    title: 'Funções no Bolso',
+    description: 'Conclua todas as missões da fase de Funções.',
+    icon: 'boxes',
+    xpReward: 50,
+    coinsReward: 20,
+    check: (s) => s.phaseCompleted['aula-5'] >= 4,
+  },
+  {
+    id: 'mestre-de-matrizes',
+    title: 'Mestre de Matrizes',
+    description: 'Conclua todas as missões da fase de Matrizes e Arranjos.',
+    icon: 'table-2',
+    xpReward: 50,
+    coinsReward: 20,
+    check: (s) => s.phaseCompleted['aula-7'] >= 3,
+  },
+  {
     id: 'nivel-3',
     title: 'Programador em Ascensão',
     description: 'Alcance o nível 3.',
@@ -57,6 +75,15 @@ export const ACHIEVEMENTS = [
     xpReward: 60,
     coinsReward: 25,
     check: (s) => s.level >= 3,
+  },
+  {
+    id: 'curso-completo',
+    title: 'Do if ao vetor paralelo',
+    description: 'Conclua todas as missões do curso (Aulas 2 a 7).',
+    icon: 'trophy',
+    xpReward: 200,
+    coinsReward: 100,
+    check: (s) => s.totalMissions > 0 && s.completedCount >= s.totalMissions,
   },
 ]
 
